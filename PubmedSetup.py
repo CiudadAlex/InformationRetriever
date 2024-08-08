@@ -11,9 +11,13 @@ from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttribut
 #IdType="doi"
 #node.attributes["href"]
 
-@xml_handle_element("PubmedArticleSet", "PubmedArticle", "MedlineCitation", "Article")
-def handler_article(node):
+@xml_handle_element("PubmedArticleSet", "PubmedArticle")
+def handler_pubmed_article(node):
     yield '-----------------------'
+    yield from node.iter_from(handler_article)
+
+@xml_handle_element("MedlineCitation", "Article")
+def handler_article(node):
     yield from node.iter_from(handler_title, handler_abstract)
 
 @xml_handle_element("ArticleTitle")
@@ -28,7 +32,7 @@ def handler_abstract(node):
 
 with open("C:/Alex/Dev/data_corpus/InformationRetrieval/pubmed22n1513.xml", "rb") as f:
     count = 0
-    for item in Parser(f).iter_from(handler_article):
+    for item in Parser(f).iter_from(handler_pubmed_article):
 
         if count == 100:
             break
