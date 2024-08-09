@@ -10,17 +10,22 @@ from bigxml import HandlerTypeHelper, Streamable, XMLElement, XMLElementAttribut
 START_ARTICLE_SYMBOL = "{{START_ARTICLE_SYMBOL}}"
 END_ARTICLE_SYMBOL = "{{END_ARTICLE_SYMBOL}}"
 
+KEY_DELIMITER = "DELIMITER"
+KEY_DOI = "DOI"
+KEY_TITLE = "Title"
+KEY_ABSTRACT = "Abstract"
+
 @xml_handle_element("PubmedArticleSet", "PubmedArticle")
 def handler_pubmed_article(node):
-    yield START_ARTICLE_SYMBOL
+    yield KEY_DELIMITER, START_ARTICLE_SYMBOL
     yield from node.iter_from(handler_doi, handler_article)
-    yield END_ARTICLE_SYMBOL
+    yield KEY_DELIMITER, END_ARTICLE_SYMBOL
 
 @xml_handle_element("PubmedData", "ArticleIdList", "ArticleId")
 def handler_doi(node):
 
     if node.attributes["IdType"] == "doi":
-        yield "DOI: " + node.text  # node content as a str
+        yield KEY_DOI, node.text
 
 @xml_handle_element("MedlineCitation", "Article")
 def handler_article(node):
@@ -28,11 +33,11 @@ def handler_article(node):
 
 @xml_handle_element("ArticleTitle")
 def handler_title(node):
-    yield "Title: " + node.text  # node content as a str
+    yield KEY_TITLE, node.text
 
 @xml_handle_element("Abstract")
 def handler_abstract(node):
-    yield "Abstract: " + node.text  # node content as a str
+    yield KEY_ABSTRACT, node.text  # node content as a str
 
 
 def generate_separated_files_with_xml(file_path):
@@ -40,20 +45,25 @@ def generate_separated_files_with_xml(file_path):
     with open(file_path, "rb") as f:
         count = 0
         list_items_doc = []
-        for item in Parser(f).iter_from(handler_pubmed_article):
+        for tuple_key_item in Parser(f).iter_from(handler_pubmed_article):
 
-            if item == START_ARTICLE_SYMBOL:
-                list_items_doc.clear()
-            elif item == END_ARTICLE_SYMBOL:
-                generate_file(list_items_doc)
-                list_items_doc.clear()
+            key = tuple_key_item[0]
+            item = tuple_key_item[1]
 
-                count = count + 1
-                if count == 100:
-                    break
+            if key == KEY_DELIMITER:
+
+                if item == START_ARTICLE_SYMBOL:
+                    list_items_doc.clear()
+                elif item == END_ARTICLE_SYMBOL:
+                    generate_file(list_items_doc)
+                    list_items_doc.clear()
+
+                    count = count + 1
+                    if count == 100:
+                        break
 
             else:
-                list_items_doc.append(item)
+                list_items_doc.append(tuple_key_item)
 
 def generate_file(list_items_doc):
     print("--------------------------------------")
