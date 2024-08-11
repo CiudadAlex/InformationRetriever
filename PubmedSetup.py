@@ -77,7 +77,9 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
                 if item == START_ARTICLE_SYMBOL:
                     list_tuple_key_item.clear()
                 elif item == END_ARTICLE_SYMBOL:
-                    generate_file(list_tuple_key_item, file_name + "_" + str(ident))
+
+                    output_file_path = output_dir_path + "/" + file_name + "_" + str(ident) + ".txt"
+                    generate_file(list_tuple_key_item, output_file_path)
                     ident = ident + 1
                     list_tuple_key_item.clear()
 
@@ -88,12 +90,12 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
                 list_tuple_key_item.append(tuple_key_item)
 
 
-def generate_file(list_tuple_key_item, file_name):
+def generate_file(list_tuple_key_item, file_path):
 
     content = ""
     for tuple_key_item in list_tuple_key_item:
         content = content + tuple_key_item[0] + ": " + tuple_key_item[1] + "\n"
 
-    f = open(str(file_name) + ".txt", "w")
+    f = open(file_path, "w")
     f.write(content)
     f.close()
