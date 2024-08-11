@@ -1,3 +1,4 @@
+'''
 # Install libraries
 !pip install -q datasets sentence-transformers faiss-cpu transformers langchain langchain_experimental huggingface-hub
 # Git clone apache-airflow
@@ -14,3 +15,11 @@
 # Can choose any text generation model found here: https://huggingface.co/models?pipeline_tag=text-generation&sort=trending
 # Recommended to choose models from TheBloke who converts to GGUF format to run in limited memory
 !huggingface-cli download TheBloke/Llama-2-7B-GGUF llama-2-7b.Q4_K_M.gguf --local-dir models/ --local-dir-use-symlinks False
+'''
+
+import PubmedSetup
+
+base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
+file_path = base_dir
+output_dir_path = base_dir + "/processed"
+PubmedSetup.generate_separated_files_with_xml(file_path, output_dir_path)
