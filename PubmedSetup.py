@@ -44,18 +44,28 @@ def handler_abstract(node):
 
 
 def generate_separated_files_of_xml_in_dir(input_dir_path, output_dir_path):
+
+    delete_files_in_dir(output_dir_path)
+
     for file in os.listdir(input_dir_path):
         if file.endswith(".xml"):
             file_path = os.path.join(input_dir_path, file)
             generate_separated_files_with_xml(file_path, output_dir_path)
 
 
+def delete_files_in_dir(dir_path):
+    for file in os.listdir(dir_path):
+        os.remove(file)
+
+
 def generate_separated_files_with_xml(file_path, output_dir_path):
+
     print("Processing file: " + file_path)
+    ident = 0
 
     with open(file_path, "rb") as f:
-        count = 0
-        list_items_doc = []
+
+        list_tuple_key_item = []
         for tuple_key_item in Parser(f).iter_from(handler_pubmed_article):
 
             key = tuple_key_item[0]
@@ -64,19 +74,26 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
             if key == KEY_DELIMITER:
 
                 if item == START_ARTICLE_SYMBOL:
-                    list_items_doc.clear()
+                    list_tuple_key_item.clear()
                 elif item == END_ARTICLE_SYMBOL:
-                    generate_file(list_items_doc)
-                    list_items_doc.clear()
-
-                    count = count + 1
-                    if count == 100:
-                        break
+                    generate_file(list_tuple_key_item, ident)
+                    ident = ident + 1
+                    list_tuple_key_item.clear()
 
             else:
-                list_items_doc.append(tuple_key_item)
+                list_tuple_key_item.append(tuple_key_item)
 
 
-def generate_file(list_items_doc):
+def generate_file(list_tuple_key_item, ident):
+
+    content = ""
+    for tuple_key_item in list_tuple_key_item:
+        content = content + tuple_key_item[0] + ": " + tuple_key_item[1] + "\n"
+
     print("--------------------------------------")
-    print(list_items_doc)
+    print(content)
+    quit()
+
+    f = open(str(ident) + ".txt", "w")
+    f.write(content)
+    f.close()
