@@ -60,7 +60,8 @@ def delete_files_in_dir(dir_path):
 
 def generate_separated_files_with_xml(file_path, output_dir_path):
 
-    print("Processing file: " + file_path)
+    file_name = os.path.basename(file_path)
+    print("Processing file: " + file_name)
     ident = 0
 
     with open(file_path, "rb") as f:
@@ -76,24 +77,23 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
                 if item == START_ARTICLE_SYMBOL:
                     list_tuple_key_item.clear()
                 elif item == END_ARTICLE_SYMBOL:
-                    generate_file(list_tuple_key_item, ident)
+                    generate_file(list_tuple_key_item, file_name + "_" + str(ident))
                     ident = ident + 1
                     list_tuple_key_item.clear()
+
+                    if ident % 500:
+                        print("Processed subfiles: " + str(ident))
 
             else:
                 list_tuple_key_item.append(tuple_key_item)
 
 
-def generate_file(list_tuple_key_item, ident):
+def generate_file(list_tuple_key_item, file_name):
 
     content = ""
     for tuple_key_item in list_tuple_key_item:
         content = content + tuple_key_item[0] + ": " + tuple_key_item[1] + "\n"
 
-    print("--------------------------------------")
-    print(content)
-    quit()
-
-    f = open(str(ident) + ".txt", "w")
+    f = open(str(file_name) + ".txt", "w")
     f.write(content)
     f.close()
