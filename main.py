@@ -22,4 +22,4 @@ import PubmedSetup
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
 file_path = base_dir
 output_dir_path = base_dir + "/processed"
-PubmedSetup.generate_separated_files_with_xml(file_path, output_dir_path)
+PubmedSetup.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
