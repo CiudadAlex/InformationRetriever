@@ -1,12 +1,6 @@
-# Get all content from *.rst files under docs airflow/docs/apache-airflow
-from langchain.document_loaders import HuggingFaceDatasetLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-#from langchain_experimental.text_splitter import SemanticChunker  #TODO try use instead of above
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
-from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
-from langchain import HuggingFacePipeline
-from langchain.chains import RetrievalQA
 import os
 
 
@@ -51,11 +45,11 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
 
     # Initialize an instance of HuggingFaceEmbeddings with the specified parameters
     embeddings = HuggingFaceEmbeddings(
-        model_name=model_path,     # Provide the pre-trained model's path
-        model_kwargs=model_kwargs, # Pass the model configuration options
-        encode_kwargs=encode_kwargs # Pass the encoding options
+        model_name=model_path,       # Provide the pre-trained model's path
+        model_kwargs=model_kwargs,   # Pass the model configuration options
+        encode_kwargs=encode_kwargs  # Pass the encoding options
     )
 
-    db = FAISS.from_documents(docs, embeddings) #may take a 4-5 minutes
+    db = FAISS.from_documents(docs, embeddings)   # may take a 4-5 minutes
     return db
 
