@@ -55,7 +55,8 @@ def generate_separated_files_of_xml_in_dir(input_dir_path, output_dir_path):
 
 def delete_files_in_dir(dir_path):
     for file in os.listdir(dir_path):
-        os.remove(file)
+        file_path = os.path.join(dir_path, file)
+        os.remove(file_path)
 
 
 def generate_separated_files_with_xml(file_path, output_dir_path):
@@ -96,6 +97,10 @@ def generate_file(list_tuple_key_item, file_path):
     for tuple_key_item in list_tuple_key_item:
         content = content + tuple_key_item[0] + ": " + tuple_key_item[1] + "\n"
 
-    f = open(file_path, "w")
+    print("___________________________________________________")
+    print(content)
+    content = content.replace(u"\u2009", " ")
+
+    f = open(file_path, "w", encoding="utf-8")
     f.write(content)
     f.close()
