@@ -54,3 +54,13 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
     db = FAISS.from_documents(docs, embeddings)   # may take a 4-5 minutes
     return db
 
+"""
+
+        # check progress
+        for d in docs:
+            if db:
+                db.add_documents([d])
+            else:
+                db = FAISS.from_documents([d], embeddings)
+            pbar.update(1) 
+"""
