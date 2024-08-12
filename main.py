@@ -18,6 +18,7 @@
 
 # Install:
 https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170
+https://visualstudio.microsoft.com/es/vs/preview/
 """
 
 import PubmedSetup
