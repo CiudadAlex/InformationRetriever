@@ -18,8 +18,14 @@
 '''
 
 import PubmedSetup
+import CustomDatasetProcessor
 
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
 file_path = base_dir
 output_dir_path = base_dir + "/processed"
-PubmedSetup.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
+#PubmedSetup.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
+
+db = CustomDatasetProcessor.generate_vector_database_with_files(output_dir_path, chunk_size=1000, chunk_overlap=150)
+question = "Does Airflow have audit logs?"
+searchDocs = db.similarity_search(question)
+print(searchDocs[0].page_content)
