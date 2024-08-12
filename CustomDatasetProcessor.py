@@ -1,6 +1,6 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 import os
 
 
@@ -30,9 +30,10 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
     text_data_to_docs = text_splitter.create_documents(text_data, metadata)
     docs = text_splitter.split_documents(text_data_to_docs)
 
-    print("--------------------")
-    print(docs[0])
-    print("--------------------")
+    for i in range(10):
+        print("--------------------")
+        print(docs[i])
+        print("--------------------")
 
     # Define the path to the pre-trained model you want to use
     model_path = "sentence-transformers/all-MiniLM-l6-v2"
