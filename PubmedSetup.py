@@ -63,7 +63,8 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
 
     file_name = os.path.basename(file_path)
     print("Processing file: " + file_name)
-    ident = 0
+    processed_files = 0
+    processed_articles = 0
 
     with open(file_path, "rb") as f:
 
@@ -75,20 +76,26 @@ def generate_separated_files_with_xml(file_path, output_dir_path):
 
             if key == KEY_DELIMITER:
 
-                if item == START_ARTICLE_SYMBOL:
-                    list_tuple_key_item.clear()
-                elif item == END_ARTICLE_SYMBOL:
+                if item == END_ARTICLE_SYMBOL:
 
-                    output_file_path = output_dir_path + "/" + file_name + "_" + str(ident) + ".txt"
-                    generate_file(list_tuple_key_item, output_file_path)
-                    ident = ident + 1
-                    list_tuple_key_item.clear()
+                    processed_articles = processed_articles + 1
 
-                    if ident % 500:
-                        print("Processed subfiles: " + str(ident))
+                    if processed_articles % 500 == 0:
+                        generate_file_with_list_tuple_key_item(output_dir_path, list_tuple_key_item, file_name, processed_files)
+                        processed_files = processed_files + 1
 
             else:
                 list_tuple_key_item.append(tuple_key_item)
+
+        generate_file_with_list_tuple_key_item(output_dir_path, list_tuple_key_item, file_name, processed_files)
+
+
+def generate_file_with_list_tuple_key_item(output_dir_path, list_tuple_key_item, file_name, ident):
+
+    output_file_path = output_dir_path + "/" + file_name + "_" + str(ident) + ".txt"
+    generate_file(list_tuple_key_item, output_file_path)
+    list_tuple_key_item.clear()
+    print("Processed subfiles: " + str(ident))
 
 
 def generate_file(list_tuple_key_item, file_path):
@@ -96,10 +103,6 @@ def generate_file(list_tuple_key_item, file_path):
     content = ""
     for tuple_key_item in list_tuple_key_item:
         content = content + tuple_key_item[0] + ": " + tuple_key_item[1] + "\n"
-
-    print("___________________________________________________")
-    print(content)
-    content = content.replace(u"\u2009", " ")
 
     f = open(file_path, "w", encoding="utf-8")
     f.write(content)
