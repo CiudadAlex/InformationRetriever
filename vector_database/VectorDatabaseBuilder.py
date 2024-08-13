@@ -130,4 +130,4 @@ def print_progress(count, number_of_documents, start_time):
 
         percentage_progress = round(1000 * elapsed_peronage) / 10
         print(str(count) + " of " + str(number_of_documents) + " " + str(percentage_progress)
-              + "% | Estimated time: " + str(remaining_print_minutes) + " min " + remaining_print_seconds + " s")
+              + "% | Estimated time: " + str(remaining_print_minutes) + " min " + str(remaining_print_seconds) + " s")
