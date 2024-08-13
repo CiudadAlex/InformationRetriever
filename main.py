@@ -9,7 +9,12 @@
 # Big download of the model ~4Gb
 # Can choose any text generation model found here: https://huggingface.co/models?pipeline_tag=text-generation&sort=trending
 # Recommended to choose models from TheBloke who converts to GGUF format to run in limited memory
-!huggingface-cli download TheBloke/Llama-2-7B-GGUF llama-2-7b.Q4_K_M.gguf --local-dir models/ --local-dir-use-symlinks False
+
+pip install -U "huggingface_hub[cli]"
+huggingface-cli download TheBloke/Llama-2-7B-GGUF llama-2-7b.Q4_K_M.gguf --local-dir models/ --local-dir-use-symlinks False
+
+or download in:
+https://huggingface.co/TheBloke/Llama-2-7B-GGUF/blob/main/llama-2-7b.Q4_K_M.gguf
 
 # Install:
 https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170

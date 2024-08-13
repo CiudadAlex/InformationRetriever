@@ -7,3 +7,4 @@ huggingface-hub==0.24.5
 llama-cpp-python==0.2.87
 bigxml==1.0.1
 langchain-huggingface==0.0.3
+huggingface-download-cli==1.0.3

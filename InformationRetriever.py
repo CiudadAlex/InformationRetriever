@@ -15,12 +15,13 @@ def get_answer(db, question):
 
     # Make sure the model path is correct for your system!
     llm = LlamaCpp(
-        model_path="models/llama-2-7b.Q4_K_M.gguf",
+        model_path="C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf",
         temperature=0.75,
         max_tokens=2000,
         top_p=1,
         callback_manager=callback_manager,
         verbose=True,  # Verbose is required to pass to the callback manager
+        n_ctx=2048
     )
 
     hf_token = "aaaaaaaaaaa"
