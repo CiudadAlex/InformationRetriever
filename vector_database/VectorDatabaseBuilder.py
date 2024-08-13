@@ -91,7 +91,7 @@ def load_database_in_file(dataset_name, dir_path):
 
 
 def get_path_file_vector_database(dataset_name, dir_path):
-    return dir_path + '/vector_database/' + dataset_name + '.pkl'
+    return dir_path + '/../vector_database/' + dataset_name + '.pkl'
 
 
 def build_vector_database(docs, embeddings):

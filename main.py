@@ -19,7 +19,7 @@ https://visualstudio.microsoft.com/es/vs/preview/
 from custom_dataset_processors.pubmed import PubmedDatasetProcessor
 from vector_database import VectorDatabaseBuilder
 
-preprocess_dataset = True
+preprocess_dataset = False
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
 dataset_name = "pubmed"
 dataset_dir_path = base_dir + '/' + dataset_name
