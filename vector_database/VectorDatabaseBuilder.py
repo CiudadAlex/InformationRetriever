@@ -19,6 +19,8 @@ def generate_vector_database_with_files(dataset_name, dir_path, chunk_size=1000,
         print("Loaded vector database from file")
         return db
 
+    print("Generating vector database from dataset")
+
     text_data = []
     metadata = []
 
@@ -42,7 +44,7 @@ def generate_vector_database_with_files(dataset_name, dir_path, chunk_size=1000,
     model_path = "sentence-transformers/all-MiniLM-l6-v2"
 
     # Create a dictionary with model configuration options, specifying to use the CPU for computations
-    model_kwargs = {'device': 'gpu'}
+    model_kwargs = {'device': 'cpu'}
 
     # Create a dictionary with encoding options, specifically setting 'normalize_embeddings' to False
     encode_kwargs = {'normalize_embeddings': False}
@@ -107,8 +109,14 @@ def build_vector_database(docs, embeddings):
             db = FAISS.from_documents([d], embeddings)
 
         count = count + 1
-        print(str(count) + " of " + str(number_of_documents))
+        print_progress(count, number_of_documents)
 
     return db
 
+
+def print_progress(count, number_of_documents):
+
+    if count % 1000 == 0:
+        percentage_progress = round(1000 * count / number_of_documents) / 10
+        print(str(count) + " of " + str(number_of_documents)) + " " + str(percentage_progress) + "%"
 
