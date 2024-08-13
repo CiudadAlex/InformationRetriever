@@ -3,6 +3,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import os
 import pickle
+import time
 
 
 def extract_text_from_file(file_path):
@@ -101,6 +102,7 @@ def build_vector_database(docs, embeddings):
     db = None
     number_of_documents = len(docs)
     count = 0
+    start_time = time.time()
 
     for d in docs:
         if db:
@@ -109,14 +111,23 @@ def build_vector_database(docs, embeddings):
             db = FAISS.from_documents([d], embeddings)
 
         count = count + 1
-        print_progress(count, number_of_documents)
+        print_progress(count, number_of_documents, start_time)
 
     return db
 
 
-def print_progress(count, number_of_documents):
+def print_progress(count, number_of_documents, start_time):
 
     if count % 1000 == 0:
-        percentage_progress = round(1000 * count / number_of_documents) / 10
-        print(str(count) + " of " + str(number_of_documents)) + " " + str(percentage_progress) + "%"
+        now = time.time()
+        elapsed_seconds = now - start_time
+        elapsed_peronage = count / number_of_documents
+        remaining_peronage = 1 - elapsed_peronage
+        remaining_seconds = remaining_peronage * elapsed_seconds / elapsed_peronage
 
+        remaining_print_minutes = remaining_seconds / 60
+        remaining_print_seconds = remaining_seconds % 60
+
+        percentage_progress = round(1000 * elapsed_peronage) / 10
+        print(str(count) + " of " + str(number_of_documents) + " " + str(percentage_progress)
+              + "% | Estimated time: " + str(remaining_print_minutes) + " min " + remaining_print_seconds + " s")
