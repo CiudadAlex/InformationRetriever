@@ -1,9 +1,4 @@
 """
-# Install libraries
-!pip install -q datasets sentence-transformers faiss-cpu transformers langchain langchain_experimental huggingface-hub
-# Git clone apache-airflow
-# Later, can clone list of repos
-!git clone --depth 1 -b main https://github.com/apache/airflow.git
 
 # llama-spp-python library may require different ARGS depending on where you are installing it
 # Check https://python.langchain.com/docs/integrations/llms/llamacpp for installation options
@@ -24,15 +19,17 @@ https://visualstudio.microsoft.com/es/vs/preview/
 from custom_dataset_processors.pubmed import PubmedDatasetProcessor
 from vector_database import VectorDatabaseBuilder
 
+preprocess_dataset = True
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
-file_path = base_dir
-output_dir_path = base_dir + "/processed"
-# PubmedDatasetProcessor.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
-
 dataset_name = "pubmed"
+dataset_dir_path = base_dir + '/' + dataset_name
+processed_dataset_dir_path = dataset_dir_path + "/processed"
 
-db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, output_dir_path, chunk_size=1000, chunk_overlap=250)
-question = "Does Airflow have audit logs?"
+if preprocess_dataset:
+    PubmedDatasetProcessor.generate_separated_files_of_xml_in_dir(dataset_dir_path, processed_dataset_dir_path)
+
+db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, processed_dataset_dir_path, chunk_size=1000, chunk_overlap=250)
+question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
 searchDocs = db.similarity_search(question)
 print(searchDocs[0].page_content)
 
