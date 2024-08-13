@@ -21,15 +21,15 @@ https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=ms
 https://visualstudio.microsoft.com/es/vs/preview/
 """
 
-import PubmedSetup
-import CustomDatasetProcessor
+from custom_dataset_processors.pubmed import PubmedDatasetProcessor
+from vector_database import VectorDatabaseBuilder
 
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
 file_path = base_dir
 output_dir_path = base_dir + "/processed"
-# PubmedSetup.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
+# PubmedDatasetProcessor.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
 
-db = CustomDatasetProcessor.generate_vector_database_with_files(output_dir_path, chunk_size=1000, chunk_overlap=250)
+db = VectorDatabaseBuilder.generate_vector_database_with_files(output_dir_path, chunk_size=1000, chunk_overlap=250)
 question = "Does Airflow have audit logs?"
 searchDocs = db.similarity_search(question)
 print(searchDocs[0].page_content)

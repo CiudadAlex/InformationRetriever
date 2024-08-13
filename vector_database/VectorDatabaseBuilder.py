@@ -39,7 +39,7 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
     model_path = "sentence-transformers/all-MiniLM-l6-v2"
 
     # Create a dictionary with model configuration options, specifying to use the CPU for computations
-    model_kwargs = {'device':'cpu'}
+    model_kwargs = {'device': 'cpu'}
 
     # Create a dictionary with encoding options, specifically setting 'normalize_embeddings' to False
     encode_kwargs = {'normalize_embeddings': False}
