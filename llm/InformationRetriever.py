@@ -27,7 +27,7 @@ class InformationRetriever:
     def get_answer(self, question):
         return self.llm(question)
 
-    def get_answer_with_context(self, db, question):
+    def get_answer_with_context(self, db, question, number_db_results=2):
 
         # RAG prompt
         template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer. Use three sentences maximum. Keep the answer as concise as possible. Always say "thanks for asking!" at the end of the answer.
@@ -38,7 +38,7 @@ class InformationRetriever:
 
         # Create a retriever object from the 'db' with a search configuration where it retrieves up to 4 relevant
         # splits/documents.
-        retriever = db.as_retriever(search_kwargs={"k": 2})
+        retriever = db.as_retriever(search_kwargs={"k": number_db_results})
 
         # Create a question-answering instance (qa) using the RetrievalQA class.
         # It's configured with a language model (llm), a chain type "refine", the retriever we created,

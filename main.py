@@ -17,32 +17,52 @@ from custom_dataset_processors.pubmed import PubmedDatasetProcessor
 from vector_database import VectorDatabaseBuilder
 from llm.InformationRetriever import InformationRetriever
 
+##############################################################################################################
+# Configuration ##############################################################################################
+##############################################################################################################
+
 preprocess_dataset = False
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
 dataset_name = "pubmed"
 dataset_dir_path = base_dir + '/' + dataset_name
 processed_dataset_dir_path = dataset_dir_path + "/processed"
+model_llama_ccp_path = "C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf"
+number_db_results = 2
+
+question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
+
+##############################################################################################################
+##############################################################################################################
+##############################################################################################################
 
 if preprocess_dataset:
     PubmedDatasetProcessor.generate_separated_files_of_xml_in_dir(dataset_dir_path, processed_dataset_dir_path)
 
 db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, processed_dataset_dir_path, chunk_size=1000, chunk_overlap=250)
-question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
+
 searchDocs = db.similarity_search(question)
 print("_______________________________________________")
 print("Documents retrieved: " + str(len(searchDocs)))
 print(searchDocs[0].page_content)
 print("_______________________________________________")
-model_llama_ccp_path = "C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf"
+
 informationRetriever = InformationRetriever(model_llama_ccp_path)
 
 answer_raw = informationRetriever.get_answer(question)
-answer_context = informationRetriever.get_answer_with_context(db, question)
+answer_context = informationRetriever.get_answer_with_context(db, question, number_db_results)
 
-print("##############################################################################################################")
+print("### QUESTION ##################################################################################################")
+print(question)
+print("###############################################################################################################")
+print("### DOCUMENTS #################################################################################################")
+for i in range(number_db_results):
+    print(searchDocs[i].page_content)
+    print("_______________________________________________")
+print("###############################################################################################################")
+print("### ANSWER RAW ################################################################################################")
 print(answer_raw)
-print("##############################################################################################################")
+print("###############################################################################################################")
+print("###ANSWER WITH CONTEXT ########################################################################################")
 print(answer_context)
-
-
+print("###############################################################################################################")
 
