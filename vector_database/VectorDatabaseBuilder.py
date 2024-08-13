@@ -124,8 +124,9 @@ def print_progress(count, number_of_documents, start_time):
         elapsed_peronage = count / number_of_documents
         remaining_peronage = 1 - elapsed_peronage
         remaining_seconds = remaining_peronage * elapsed_seconds / elapsed_peronage
+        remaining_seconds = round(remaining_seconds)
 
-        remaining_print_minutes = remaining_seconds / 60
+        remaining_print_minutes = round(remaining_seconds / 60)
         remaining_print_seconds = remaining_seconds % 60
 
         percentage_progress = round(1000 * elapsed_peronage) / 10
