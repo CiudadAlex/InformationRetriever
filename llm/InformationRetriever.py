@@ -1,21 +1,19 @@
 
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
-from langchain.chains import LLMChain
 from langchain_community.llms import LlamaCpp
 from langchain.chains import RetrievalQA
-from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 from langchain.prompts import PromptTemplate
 
 
-def get_answer(db, question):
+def build_llm(model_llama_ccp_path):
 
     # Callbacks support token-wise streaming
     callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 
     # Make sure the model path is correct for your system!
     llm = LlamaCpp(
-        model_path="C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf",
+        model_path=model_llama_ccp_path,
         temperature=0.75,
         max_tokens=2000,
         top_p=1,
@@ -24,14 +22,12 @@ def get_answer(db, question):
         n_ctx=2048
     )
 
-    hf_token = "aaaaaaaaaaa"
+    return llm
 
-    # Load the tokenizer associated with the specified model
-    # You may notice that we are using "meta-llama/Llama-2-7b-hf" instead of "TheBloke/Llama-2-7B-GGUF"
-    # This is because the tokenizer model is not included in the GGUF converted LLM, but it is sufficient to use the
-    # tokenizer from the original model. As far as I know, as long as your LLM and tokenizer speak the same language,
-    # it is fine. In this case, the LLM and tokenizer are of model_type "llama".
-    # tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", padding=True, truncation=True, max_length=512, token=hf_token)
+
+def get_answer(db, question, model_llama_ccp_path):
+
+    llm = build_llm(model_llama_ccp_path)
 
     # Baseline answer from LLM without retrieval
     llm(question)

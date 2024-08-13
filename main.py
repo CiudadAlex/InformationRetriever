@@ -23,7 +23,7 @@ https://visualstudio.microsoft.com/es/vs/preview/
 
 from custom_dataset_processors.pubmed import PubmedDatasetProcessor
 from vector_database import VectorDatabaseBuilder
-import InformationRetriever
+from llm import InformationRetriever
 
 preprocess_dataset = False
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
@@ -40,7 +40,8 @@ searchDocs = db.similarity_search(question)
 print(str(len(searchDocs)))
 print(searchDocs[0].page_content)
 print("_______________________________________________")
-InformationRetriever.get_answer(db, question)
+model_llama_ccp_path = "C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf"
+InformationRetriever.get_answer(db, question, model_llama_ccp_path)
 
 
 
