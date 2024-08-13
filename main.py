@@ -29,21 +29,11 @@ file_path = base_dir
 output_dir_path = base_dir + "/processed"
 # PubmedDatasetProcessor.generate_separated_files_of_xml_in_dir(file_path, output_dir_path)
 
-db = VectorDatabaseBuilder.generate_vector_database_with_files(output_dir_path, chunk_size=1000, chunk_overlap=250)
+dataset_name = "pubmed"
+
+db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, output_dir_path, chunk_size=1000, chunk_overlap=250)
 question = "Does Airflow have audit logs?"
 searchDocs = db.similarity_search(question)
 print(searchDocs[0].page_content)
 
-"""
-import pickle 
 
-student_names = ['Alice','Bob','Elena','Jane','Kyle']
-
-with open('student_file.pkl', 'wb') as f:  # open a text file
-    pickle.dump(student_names, f) # serialize the list
-    f.close()
-    
-with open('student_file.pkl', 'rb') as f:
-    student_names_loaded = pickle.load(f) # deserialize using load()
-    print(student_names_loaded) # print student names
-"""

@@ -2,6 +2,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 import os
+import pickle
 
 
 def extract_text_from_file(file_path):
@@ -11,7 +12,12 @@ def extract_text_from_file(file_path):
     return file_content
 
 
-def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap=150):
+def generate_vector_database_with_files(dataset_name, dir_path, chunk_size=1000, chunk_overlap=150):
+
+    db = load_database_in_file(dataset_name, dir_path)
+    if db:
+        print("Loaded vector database from file")
+        return db
 
     text_data = []
     metadata = []
@@ -30,16 +36,13 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
     text_data_to_docs = text_splitter.create_documents(text_data, metadata)
     docs = text_splitter.split_documents(text_data_to_docs)
 
-    for i in range(10):
-        print("--------------------")
-        print(docs[i])
-        print("--------------------")
+    print_some_examples(docs, 5)
 
     # Define the path to the pre-trained model you want to use
     model_path = "sentence-transformers/all-MiniLM-l6-v2"
 
     # Create a dictionary with model configuration options, specifying to use the CPU for computations
-    model_kwargs = {'device': 'cpu'}
+    model_kwargs = {'device': 'gpu'}
 
     # Create a dictionary with encoding options, specifically setting 'normalize_embeddings' to False
     encode_kwargs = {'normalize_embeddings': False}
@@ -51,16 +54,61 @@ def generate_vector_database_with_files(dir_path, chunk_size=1000, chunk_overlap
         encode_kwargs=encode_kwargs  # Pass the encoding options
     )
 
-    db = FAISS.from_documents(docs, embeddings)   # may take a 4-5 minutes
+    db = build_vector_database(docs, embeddings)
+    print("Created vector database from documents")
+
+    store_database_in_file(dataset_name, dir_path, db)
+    print("Stored vector database in file")
+
     return db
 
-"""
 
-        # check progress
-        for d in docs:
-            if db:
-                db.add_documents([d])
-            else:
-                db = FAISS.from_documents([d], embeddings)
-            pbar.update(1) 
-"""
+def print_some_examples(docs, num):
+
+    for i in range(num):
+        print("--------------------")
+        print(docs[i])
+        print("--------------------")
+
+
+def store_database_in_file(dataset_name, dir_path, db):
+
+    file_path = get_path_file_vector_database(dataset_name, dir_path)
+    with open(file_path, 'wb') as f:  # open a text file
+        pickle.dump(db, f)  # serialize the list
+        f.close()
+
+
+def load_database_in_file(dataset_name, dir_path):
+
+    file_path = get_path_file_vector_database(dataset_name, dir_path)
+    if os.path.isfile(file_path):
+        with open(file_path, 'rb') as f:
+            db = pickle.load(f)  # deserialize using load()
+            return db
+    else:
+        return None
+
+
+def get_path_file_vector_database(dataset_name, dir_path):
+    return dir_path + '/vector_database/' + dataset_name + '.pkl'
+
+
+def build_vector_database(docs, embeddings):
+
+    db = None
+    number_of_documents = len(docs)
+    count = 0
+
+    for d in docs:
+        if db:
+            db.add_documents([d])
+        else:
+            db = FAISS.from_documents([d], embeddings)
+
+        count = count + 1
+        print(str(count) + " of " + str(number_of_documents))
+
+    return db
+
+
