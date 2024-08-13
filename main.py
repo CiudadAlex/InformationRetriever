@@ -29,7 +29,7 @@ processed_dataset_dir_path = dataset_dir_path + "/processed"
 model_llama_ccp_path = "C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf"
 number_db_results = 2
 
-question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
+question = "what is the molecular weight phosphodiesterase?"
 
 ##############################################################################################################
 ##############################################################################################################
