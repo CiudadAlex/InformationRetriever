@@ -18,6 +18,7 @@ https://visualstudio.microsoft.com/es/vs/preview/
 
 from custom_dataset_processors.pubmed import PubmedDatasetProcessor
 from vector_database import VectorDatabaseBuilder
+import InformationRetriever
 
 preprocess_dataset = False
 base_dir = "C:/Alex/Dev/data_corpus/InformationRetrieval"
@@ -31,6 +32,10 @@ if preprocess_dataset:
 db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, processed_dataset_dir_path, chunk_size=1000, chunk_overlap=250)
 question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
 searchDocs = db.similarity_search(question)
+print(str(len(searchDocs)))
 print(searchDocs[0].page_content)
+print("_______________________________________________")
+InformationRetriever.get_answer(db, question)
+
 
 
