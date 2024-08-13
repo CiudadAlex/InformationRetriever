@@ -29,7 +29,8 @@ if preprocess_dataset:
 db = VectorDatabaseBuilder.generate_vector_database_with_files(dataset_name, processed_dataset_dir_path, chunk_size=1000, chunk_overlap=250)
 question = "do you know something about a phosphodiesterase that was purified from cultured tobacco?"
 searchDocs = db.similarity_search(question)
-print(str(len(searchDocs)))
+print("_______________________________________________")
+print("Documents retrieved: " + str(len(searchDocs)))
 print(searchDocs[0].page_content)
 print("_______________________________________________")
 model_llama_ccp_path = "C:/Alex/Dev/models/llm/llama-2-7b.Q4_K_M.gguf"

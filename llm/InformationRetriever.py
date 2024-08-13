@@ -53,5 +53,5 @@ class InformationRetriever:
         )
 
         result = qa({"query": question})
-        print(result["result"])
+        return result["result"]
 
